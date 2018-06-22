@@ -1,6 +1,9 @@
+#!/usr/bin/python
+# coding: utf-8
 import json
 
 from favicon_utils import getFaviconUrl
+from icondb import IconDB
 
 
 def handle_geturl(event, context):
@@ -19,25 +22,21 @@ def handle_geturl(event, context):
 
     return response
 
+def handle_geticondb(event, context):
 
-if __name__ == "__main__":
-    status, ico_url, msg = getFaviconUrl('https://www.google.com')
-    print(status, ico_url, msg)
+    host = 'crayon-postgres.coghvekvxrjf.us-east-1.rds.amazonaws.com'
+    port = 5432
+    database = 'favicon'
+    user = 'crayon'
+    password = 'Crayonpw99'
 
-    status, ico_url, msg  = getFaviconUrl('https://www.google.com/tom')
-    print(status, ico_url, msg)
- 
-    status, ico_url, msg  = getFaviconUrl('https://www.google.com:443/dick')
-    print(status, ico_url, msg)
-   
-    status, ico_url, msg  = getFaviconUrl('')
-    print(status, ico_url, msg)
-  
-    status, ico_url, msg  = getFaviconUrl(None)
-    print(status, ico_url, msg)
-  
-    status, ico_url, msg  = getFaviconUrl('www.google.com')
-    print(status, ico_url, msg)
-  
-    status, ico_url, msg  = getFaviconUrl('https://www.dsfgsdf.com')
-    print(status, ico_url, msg)
+    icondb = IconDB(host, port, database, user, password)
+
+    print(icondb)
+
+    response = {
+        "statusCode": 200,
+        "body": json.dumps("it worked")
+    }
+
+    return response

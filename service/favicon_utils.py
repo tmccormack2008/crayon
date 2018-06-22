@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# coding: utf-8
 import requests
 from requests.exceptions import ConnectionError
 from urllib import parse
@@ -11,8 +13,7 @@ def getFaviconUrl(target_url):
         msg = f'Missing target url'
         return 400, None, msg
 
-    temp_url = parse.urlsplit(target_url, scheme='https')
-    print(temp_url)
+    temp_url = parse.urlsplit(target_url, scheme='http')
 
     # if we don't have either a netloc or a path component, bail
     if not temp_url.netloc and not temp_url.path:
@@ -38,3 +39,29 @@ def getFaviconUrl(target_url):
     else:
         msg = f'Favicon not found at {favicon_url}'
         return resp.status_code, None, msg
+
+
+if __name__ == "__main__":
+    status, ico_url, msg = getFaviconUrl('https://www.google.com')
+    print(status, ico_url, msg)
+
+    status, ico_url, msg  = getFaviconUrl('https://www.google.com/tom')
+    print(status, ico_url, msg)
+
+    status, ico_url, msg  = getFaviconUrl('www.google.com/index.html')
+    print(status, ico_url, msg)
+  
+    status, ico_url, msg  = getFaviconUrl('https://www.google.com:443/dick')
+    print(status, ico_url, msg)
+   
+    status, ico_url, msg  = getFaviconUrl('')
+    print(status, ico_url, msg)
+  
+    status, ico_url, msg  = getFaviconUrl(None)
+    print(status, ico_url, msg)
+  
+    status, ico_url, msg  = getFaviconUrl('www.google.com')
+    print(status, ico_url, msg)
+  
+    status, ico_url, msg  = getFaviconUrl('https://www.dsfgsdf.com')
+    print(status, ico_url, msg)

@@ -28,6 +28,13 @@ functions:
       - http:
           path: favicon
           method: get
+  
+  geticondb:
+    handler: handler.handle_geticondb
+    events:
+      - http:
+          path: icondb
+          method: get
 
 custom:
   pythonRequirements:
