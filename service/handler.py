@@ -14,13 +14,13 @@ def handle_geturl(event, context):
 
     return_msg = ico_url if status == 200 else msg
 
-
     response = {
         "statusCode": status,
         "body": json.dumps(return_msg)
     }
 
     return response
+
 
 def handle_geticondb(event, context):
 

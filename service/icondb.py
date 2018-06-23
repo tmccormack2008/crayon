@@ -30,31 +30,25 @@ class IconDB():
                                     port=port,
                                     database=database)
 
-    def _execute(self, sqltext):
+    def _execute(self, sqltext, commit=True):
         print(sqltext)
         with self._conn.cursor() as cursor:
-            results = cursor.execute(sqltext)
-            print(cursor.rowcount)
-            self._conn.commit()
-        # cursor = self._conn.cursor()
-        # print(cursor.execute(sqltext))
-
-        # print(cursor.messages)
-
-        # print(results)
+            cursor.execute(sqltext)
+            if commit:
+                self._conn.commit()
+            return cursor.rowcount
 
     def _query(self, sqltext, all_rows=False):
         print(sqltext)
         with self._conn.cursor() as cursor:
-            results = cursor.execute(sqltext)
+            cursor.execute(sqltext)
             print(cursor.rowcount)
             return cursor.fetchone() if not all_rows else cursor.fetchall()
 
-    
     def create_table(self):
         self._execute(CREATE_TABLE_SQL)
         # need to create index on url as well
-        
+
     def delete_table(self):
         self._execute(DELETE_TABLE_SQL)
 
@@ -64,16 +58,22 @@ class IconDB():
                            VALUES ('{target_url}', '{favicon_url}', NOW(), TRUE, NOW());"""
         else:
             sqltext = f"""INSERT INTO favicon (url, create_date, updated)
-                           VALUES ('{target_url}', NOW(), FALSE);"""           
+                           VALUES ('{target_url}', NOW(), FALSE);"""
         self._execute(sqltext)
 
     def read_row(self, target_url):
         sqltext = f"SELECT * from favicon where url = '{target_url}'"
-        print(self._query(sqltext))
-        
+        return self._query(sqltext)
+
     def read_all_rows(self):
         sqltext = f"SELECT * from favicon"
-        print(self._query(sqltext, True))
+        return self._query(sqltext, True)
+
+    def update_favicon_url_row(self, target_url, favicon_url):
+        sqltext = f"""UPDATE favicon SET favicon_url = '{favicon_url}', updated = TRUE, update_date = NOW()
+                            WHERE url = '{target_url}'"""
+        self._execute(sqltext)
+
 
 if __name__ == "__main__":
 
@@ -95,11 +95,10 @@ if __name__ == "__main__":
     # icondb.create_row('ddd', 'eee')
     # icondb.create_row('fff', 'xxx')
     icondb.create_row('ggg')
-    
+
     print(icondb.read_all_rows())
 
 
-    
 # CREATE TABLE favicon (
 #   id              SERIAL PRIMARY KEY,
 #   url             VARCHAR(4096) NOT NULL,
