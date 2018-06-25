@@ -4,12 +4,12 @@ import requests
 from requests.exceptions import ConnectionError, ReadTimeout, RequestException
 from urllib import parse
 from datetime import datetime
-from pprint import pprint
 
 from icondb import IconDB
 from extract_utils import split_files
 
 FAVICON_TEXT = 'favicon.ico'
+REQUEST_TIMEOUT = 20  # 20 seconds timeout
 
 
 def getIconDBParams():
@@ -50,7 +50,7 @@ class FavIconDBUtils():
         # head since we are just checking for existence
         status_code = 0
         try:
-            resp = self._session.head(favicon_url, timeout=10, allow_redirects=True)
+            resp = self._session.head(favicon_url, timeout=REQUEST_TIMEOUT, allow_redirects=True)
         except ReadTimeout:
             status_code = 408
         else:
@@ -61,7 +61,7 @@ class FavIconDBUtils():
         # try a get since some websites don't handle 'HEAD'
         print(f'HTTP HEAD returned {status_code} for {favicon_url}, trying GET')
         try:
-            resp = self._session.get(favicon_url, timeout=10)
+            resp = self._session.get(favicon_url, timeout=REQUEST_TIMEOUT, allow_redirects=True)
         except RequestException:
             raise
         except Exception:

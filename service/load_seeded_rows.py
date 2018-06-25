@@ -10,7 +10,7 @@ if __name__ == "__main__":
     start_time = datetime.now()
     favicondb = FavIconDBUtils()
 
-    total_rows, loaded_rows, bad_results = favicondb.loadSeededRows(100)
+    total_rows, loaded_rows, bad_results = favicondb.loadSeededRows(10000)
 
     duration = datetime.now() - start_time
 
